@@ -1,0 +1,9 @@
+---
+- hosts: "{{ hosts_inventory }}"
+  become: yes
+
+  tasks:
+    - name: set timezone to America/New_York
+      timezone:
+        name: America/New_York
+#        name: America/Chicago
