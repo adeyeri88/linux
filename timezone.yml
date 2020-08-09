@@ -6,4 +6,4 @@
     - name: set timezone to America/New_York
       timezone:
         name: America/New_York
-#        name: America/Chicago
+        name: America/Chicago
