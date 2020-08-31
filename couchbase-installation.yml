@@ -1,0 +1,49 @@
+####  This Playbook is going to install couchbase community 
+###Version 0.1
+---
+#- hosts: couchbase
+- hosts: "{{ hosts_inventory }}"
+  become: yes
+  tasks:
+    - name: Download couchbase rpm package
+      get_url: 
+        url: https://packages.couchbase.com/releases/6.6.0/couchbase-server-community-6.6.0-centos7.x86_64.rpm
+        dest: /tmp
+
+    - name: install the couchbase rpm package
+      yum:
+        name: /tmp/couchbase-server-community-6.6.0-centos7.x86_64.rpm
+        state: present
+
+    - name: set security limit for couchbase processor on soft
+      pam_limits:
+        domain: couchbase
+        limit_type: soft
+        limit_item: nofile
+        value: 7500
+        dest: /etc/security/limits.d/10-couchbase.conf
+
+    - name: set security limit for couchbase processor on hard
+      pam_limits:
+        domain: couchbase
+        limit_type: hard
+        limit_item: nofile
+        value: 7500
+        dest: /etc/security/limits.d/10-couchbase.conf
+
+    - name: start and enable couchbase server
+      service:
+        name: couchbase-server
+        state: started
+        enabled: yes
+
+    - name: enable the couchbase port on firewalld
+      firewalld:
+        port: 8091/tcp
+        permanent: yes
+        state: enabled
+
+    - name: reload the firewalld service
+      service:
+        name: firewalld
+        state: restarted
