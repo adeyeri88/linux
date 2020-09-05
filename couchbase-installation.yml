@@ -1,5 +1,5 @@
 ####  This Playbook is going to install couchbase community 
-###Version 0.1
+###Version 0.2
 ---
 #- hosts: couchbase
 - hosts: "{{ hosts_inventory }}"
