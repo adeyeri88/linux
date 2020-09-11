@@ -1,0 +1,243 @@
+---
+- hosts: "{{ hosts_inventory }}"
+  become: yes
+  tasks:
+    - name: install rsync packages to take a backup
+      package:
+        name: rsync
+        state: latest
+      tags:
+        - var
+        - varaudit
+        - tmp
+        - home
+
+    - name: azurerm volume group creation
+      lvg:
+        vg: dbvg
+        pvs: /dev/sdb
+      tags:
+        - var
+        - varaudit
+        - tmp
+        - home
+
+    - name: /tmp lvm creation
+      lvol:
+        vg: dbvg
+        lv: lvtmp
+        size: 2g
+      tags:
+        - tmp
+
+    - name: /var lvm creation
+      lvol:
+        vg: dbvg
+        lv: lvvar
+        size: 3g
+      tags:
+        - var
+
+    - name: /var/log/audit lvm creation
+      lvol:
+        vg: dbvg
+        lv: lvvaraudit
+        size: 2g
+      tags:
+        - varaudit
+
+    - name: /home lvm creation
+      lvol:
+        vg: dbvg
+        lv: lvhome
+        size: 2G
+      tags:
+        - home
+
+    - name: create file system for lvtmp
+      filesystem:
+        fstype: ext4
+        dev: /dev/dbvg/lvtmp
+      tags:
+        - tmp
+
+    - name: create file system for lvvar
+      filesystem:
+        fstype: ext4
+        dev: /dev/dbvg/lvvar
+      tags:
+        - var
+
+    - name: create file system for lvvaraudit
+      filesystem:
+        fstype: ext4
+        dev: /dev/dbvg/lvvaraudit
+      tags:
+        - varaudit
+
+    - name: create file system for lvhome
+      filesystem:
+        fstype: ext4
+        dev: /dev/dbvg/lvhome
+      tags:
+        - home
+
+    - name: create a backup mount point for /var_backup /home_backup /varaudit_backup
+      file:
+        path: "{{ item }}"
+        state: directory
+        mode: '0755'
+      loop:
+        - /var_backup
+        - /home_backup
+        - /varaudit_backup
+      tags:
+        - var
+        - home
+        - varaudit
+
+    - name: create a backup mount point for /tmp_backup
+      file:
+        path: /tmp_backup
+        state: directory
+        mode: '1777'
+      tags:
+        - tmp
+
+    - name: mount a temporarily /tmp_backup  mountpoint
+      shell: mount /dev/dbvg/lvtmp /tmp_backup
+      tags:
+        - tmp
+
+    - name: mount a temporarily /home_backup  mountpoint
+      shell: mount /dev/dbvg/lvhome /home_backup
+      tags:
+        - home
+
+    - name: mount a temporarily /var_backup  mountpoint
+      shell: mount /dev/dbvg/lvvar /var_backup
+      tags:
+        - var
+
+    - name: mount a temporarily /varaudit_backup  mountpoint
+      shell: mount /dev/dbvg/lvvaraudit /varaudit_backup
+      tags:
+        - varaudit
+
+    - name: move /var directory content by synchronize the system
+      synchronize:
+        src: /var/
+        dest: /var_backup
+      delegate_to: "{{ hosts_inventory }}"
+      tags:
+        - var
+
+    - name: display difference between these two files
+      shell: "diff -r /var/ /var_backup"
+      tags:
+        - var
+      ignore_errors: yes
+
+    - name: move /varaudit directory content by synchronize the system
+      synchronize:
+        src: /var/log/audit/
+        dest: /varaudit_backup
+      delegate_to: "{{ hosts_inventory }}"
+      tags:
+        - varaudit
+
+    - name: display difference between these two files
+      shell: "diff -r /var/log/audit /varaudit_backup"
+      tags:
+        - varaudit
+      ignore_errors: yes
+
+      
+    - name: move /tmp directory content by synchronize the system
+      synchronize:
+        src: /tmp/
+        dest: /tmp_backup
+      delegate_to: "{{ hosts_inventory }}"
+      tags:
+        - tmp
+
+    - name: display difference between these two files
+      shell: "diff -r /tmp /tmp_backup"
+      tags:
+        - tmp
+      ignore_errors: yes
+
+    - name: move /home directory content by synchronize the system
+      synchronize:
+        src: /home/
+        dest: /home_backup
+      delegate_to: "{{ hosts_inventory }}"
+      tags:
+        - home
+
+    - name: display difference between these two files
+      shell: "diff -r /home /home_backup"
+      tags:
+        - home
+      ignore_errors: yes
+
+    - name: unmount a temporarily /tmp_backup  mountpoint
+      shell: umount /tmp_backup
+      tags:
+        - tmp
+
+    - name: unmount a temporarily /home_backup  mountpoint
+      shell: umount /home_backup
+      tags:
+        - home
+
+    - name: unmount a temporarily /var_backup  mountpoint
+      shell: umount /var_backup
+      tags:
+        - var
+
+    - name: unmount a temporarily /varaudit_backup  mountpoint
+      shell: umount /varaudit_backup
+      tags:
+        - varaudit
+
+    - name: mount tmp logical volumes
+      mount:
+        name: /tmp
+        src: /dev/dbvg/lvtmp
+        fstype: ext4
+        state: mounted
+      tags:
+        - tmp
+
+    - name: mount /var logical volumes
+      mount:
+        name: /var
+        src: /dev/dbvg/lvvar
+        fstype: ext4
+        state: mounted
+      tags:
+        - var
+
+    - name: mount /var/log/audit logical volumes
+      mount:
+        name: /var/log/audit
+        src: /dev/dbvg/lvvaraudit
+        fstype: ext4
+        state: mounted
+      tags:
+        - varaudit
+
+    - name: mount /home logical volumes
+      mount:
+        name: /home
+        src: /dev/dbvg/lvhome
+        fstype: ext4
+        state: mounted
+      tags:
+        - home
+
+    - name: Wait for server to become available
+      wait_for_connection:
+        delay: 60
+        timeout: 500

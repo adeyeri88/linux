@@ -1,0 +1,41 @@
+---
+- hosts: "{{ hosts_inventory }}"
+  become: yes
+  tasks:
+    - name: install httpd
+      yum:
+        name: httpd
+        state: installed
+      tags:
+        - apache
+        - install
+        - class2
+
+    - name: install ftpd
+      yum:
+        name: vsftpd
+        state: present
+      tags:
+        - ftp
+        - class2
+
+    - name: start apache app and enable it
+      service:
+        name: httpd
+        state: started
+        enabled: yes
+      tags:
+        - apache
+        - class2
+        - starting
+
+    - name: start ftp server and enable it
+      service:
+        name: vsftpd
+        state: started
+        enabled: yes
+      tags:
+        - ftp
+        - class2
+        - starting
+

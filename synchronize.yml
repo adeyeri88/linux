@@ -1,0 +1,18 @@
+---
+- hosts: "{{ hosts_inventory }}"
+  become: yes
+
+  tasks:
+    - name: create the backup directory
+      file:
+        path: /home_test
+        owner: root
+        group: root
+        mode: '0755'
+        state: directory
+
+    - name: move /home directory content by synchronize the system
+      synchronize:
+        src: /home/
+        dest: /home_test
+      delegate_to: "{{ hosts_inventory }}"
