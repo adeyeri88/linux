@@ -1,0 +1,49 @@
+---
+# tasks file for nfs-server
+- name: check if and install nfs packages
+  yum:
+    name: nfs-utils
+    state: latest
+  tags:
+    - nfs_server
+    - nfs_client
+
+- name: create the nfs mount point
+  file:
+    path: "{{ nfssharepoint }}"
+    owner: root
+    group: root
+    mode: '0777'
+    state: directory
+  tags:
+    - nfs_server
+
+- name: copy /etc/exports from template as a Jinja file
+  template:
+    src: templates/exports.j2
+    dest: /etc/exports
+    owner: root
+    group: root
+    mode: '0755'
+    backup: yes
+  notify:
+    - restart nfs
+    - restart firewalld
+  tags:
+    - nfs_server
+    - copy_export
+
+- name: add nfs, rpc-bind and mountd service to firewalld
+  firewalld:
+    service: "{{ item }}"
+    permanent: yes
+    state: enabled
+  loop:
+    - nfs
+    - rpc-bind
+    - mountd
+  tags:
+    - nfs_server
+
+- name: Include a nfs_client.yml to continues
+  include: nfs_client.yml

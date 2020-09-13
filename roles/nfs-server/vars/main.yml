@@ -1,0 +1,7 @@
+---
+# vars file for nfs-server
+nfssharepoint: /data/nsfshare
+nfsmaster: "{{ nfsserver }}"
+#nfsserver: "{{ 192.168.1.203 }}"
+nfsclient: "*"
+nfsmount: /data/nfsclient

@@ -1,0 +1,24 @@
+---
+#This yml file will manage nfs client
+
+- name: create a mount point for nfs client
+  file:
+    path: "{{ nfsmount }}"
+    state: directory
+    mode: '0755'
+    owner: root
+  tags:
+    - nfs_client
+
+- name: update fstab and mount nfs share permanently
+  mount:
+    path: "{{ nfsmount }}"
+    src: '{{ nfsserver }}:{{ nfssharepoint }}'
+    fstype: nfs
+    opts: _netdev,rw
+    dump: 0
+    passno: 2
+    state: mounted
+  tags:
+    - nfs_client
+
