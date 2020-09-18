@@ -32,6 +32,17 @@
     - nfs_server
     - copy_export
 
+- name: restart nfs server
+  service:
+    name: "{{ item }}"
+    state: restarted
+    enabled: yes
+  loop: 
+    - rpcbind
+    - nfs-server
+  tags:
+    - nfs_server
+
 - name: add nfs, rpc-bind and mountd service to firewalld
   firewalld:
     service: "{{ item }}"
@@ -45,6 +56,14 @@
     - nfs_server
   notify:
     - restart firewalld
+
+- name: restart firewalld daemon
+  service:
+    name: firewalld
+    state: restarted
+    enabled: yes
+  tags:
+    - nfs_server
 
 - name: Include a nfs_client.yml to continues
   include: nfs_client.yml
