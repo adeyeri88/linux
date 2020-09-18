@@ -28,7 +28,6 @@
     backup: yes
   notify:
     - restart nfs
-    - restart firewalld
   tags:
     - nfs_server
     - copy_export
@@ -44,6 +43,8 @@
     - mountd
   tags:
     - nfs_server
+  notify:
+    - restart firewalld
 
 - name: Include a nfs_client.yml to continues
   include: nfs_client.yml
