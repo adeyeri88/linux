@@ -1,0 +1,76 @@
+---
+#------------------------------------------------------------------------------
+# Description: Playbook to perform 'patching using yum' on selected hosts.
+#        NOTE: This playbook will also reboot hosts if kernel is updated.
+#------------------------------------------------------------------------------
+
+- name: upgrade packages via yum
+  yum:
+    name={{ yum_name }}
+    state={{ yum_state }}
+    disablerepo={{ yum_disablerepo }}
+    enablerepo={{ yum_enablerepo }}
+    exclude={{ yum_exclude }}
+  become: "yes"
+  register: yumcommandout
+  when: (ansible_facts['os_family'] == "RedHat" and ansible_facts['distribution_major_version'] == "6") or
+        (ansible_facts['os_family'] == "RedHat" and ansible_facts['distribution_major_version'] == "7")
+
+- name: Print errors if yum failed
+  debug:
+    msg: "yum command produced errors"
+  when: yumcommandout is not defined
+
+- name: upgrade packages via dnf
+  dnf:
+    name={{ dnf_name }}
+    state={{ dnf_state }}
+    disablerepo={{ dnf_disablerepo }}
+    enablerepo={{ dnf_enablerepo }}
+    exclude={{ dnf_exclude }}
+  become: "yes"
+  register: dnfcommandout
+  when: (ansible_facts['os_family'] == "RedHat" and ansible_facts['distribution_major_version'] == "8")
+
+- name: Print errors if dnf failed
+  debug:
+    msg: "dnf command produced errors"
+  when: dnfcommandout is not defined
+
+#- name: check to see if we need a reboot
+#  shell: needs-restarting -r
+#  register: result
+#  ignore_errors: yes
+
+- name: Check for reboot hint.
+  shell: LAST_KERNEL=$(rpm -q --last kernel | awk 'NR==1{sub(/kernel-/,""); print $1}'); CURRENT_KERNEL=$(uname -r); if [ $LAST_KERNEL != $CURRENT_KERNEL ]; then echo 'reboot'; else echo 'no'; fi
+  ignore_errors: true
+  register: reboot_hint
+
+- name: display result
+  debug:
+    var: reboot_hint
+
+- name: Rebooting ...
+  shell: "/sbin/shutdown -r now"   ######Reboot required for updated kernel
+  async: 30
+  poll: 0
+  ignore_errors: true
+#  when: reboot_hint.stdout.find("reboot") != -1
+  when: reboot_hint.stdout == "reboot"
+  register: rebooting
+
+
+# This pause is mandatory, otherwise the existing control connection
+# gets reused!
+- name: Pausing to allow server to shutdown and terminate our SSH connection
+  pause: seconds=30
+#  when: reboot_hint.stdout.find("reboot") != -1
+  when: reboot_hint.stdout == "reboot"
+
+- name: Wait for reboot to complete and SSH to become available
+  wait_for_connection:
+    timeout: 600
+    delay: 60
+#  when: reboot_hint.stdout.find("reboot") != -1
+  when: reboot_hint.stdout == "reboot"
