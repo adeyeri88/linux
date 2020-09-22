@@ -1,9 +1,25 @@
 ---
 ###Playbooks to patch redaht centos system
 ### Develop by Abdoul Alarou
-- hosts: "{{ hosts_inventory }}"
-  sudo: true
+
+- name: playbook to patch linux hosts
+  hosts: "{{ hosts_inventory }}"
+  become: yes
+  serial: 2
+
+# this task will clean all yum cache on a system
   tasks:
+    - name: clean up the repos
+      shell: yum clean all
+      args:
+        warn: no
+
+# this task will will reload all repos
+    - name: repolist the repos
+      shell: yum repolist all
+      args:
+        warn: False
+        
     - name: upgrade all packages
       yum: name=* state=latest
 
