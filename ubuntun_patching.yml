@@ -30,14 +30,15 @@
         test_command: uptime
       when: reboot_required_file.stat.exists
 
-      - name: Wait for system to become reachable again
-        wait_for_connection:
-            delay: 60
-            timeout: 300
+    - name: Wait for system to become reachable again
+      wait_for_connection:
+        delay: 60
+        timeout: 300
 
-      - name: Verify new update (optional)
-        command: uname -mrs
-        register: uname_result
-      - name: Display new kernel version
-        debug:
-            var: uname_result.stdout_lines
+    - name: Verify new update (optional)
+      command: uname -mrs
+      register: uname_result
+
+    - name: Display new kernel version
+      debug:
+        var: uname_result.stdout_lines
