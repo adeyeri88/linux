@@ -16,7 +16,7 @@
   args:
     warn: False
   when: ansible_os_family == "RedHat"
-  
+
 #####This tasks will check current installed package and take a backup in mentioning location below
 - name: Check all current installed packages on RedHat and append results to /opt/update.txt
   shell: yum list installed > /opt/update-"`date +"%d-%m-%Y"`"
@@ -29,8 +29,8 @@
   yum:
     name={{ yum_name }}
     state={{ yum_state }}
-    disablerepo={{ yum_disablerepo }}
-    enablerepo={{ yum_enablerepo }}
+#    disablerepo={{ yum_disablerepo }}
+#    enablerepo={{ yum_enablerepo }}
     exclude={{ yum_exclude }}
   become: "yes"
   register: yumcommandout
@@ -47,8 +47,8 @@
   dnf:
     name={{ dnf_name }}
     state={{ dnf_state }}
-    disablerepo={{ dnf_disablerepo }}
-    enablerepo={{ dnf_enablerepo }}
+#    disablerepo={{ dnf_disablerepo }}
+#    enablerepo={{ dnf_enablerepo }}
     exclude={{ dnf_exclude }}
   become: "yes"
   register: dnfcommandout
