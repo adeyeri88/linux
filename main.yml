@@ -1,0 +1,99 @@
+---
+#------------------------------------------------------------------------------
+# Description: Playbook to perform 'patching using yum' on selected hosts.
+#        NOTE: This playbook will also reboot hosts if kernel is updated.
+#------------------------------------------------------------------------------
+#### This tasks will clean all yum cache on a system
+- name: clean up the repos
+  shell: yum clean all
+  args:
+    warn: False
+  when: ansible_os_family == "RedHat"
+
+## This tasks will reload all repos
+- name: repolist all the repos
+  shell: yum repolist all
+  args:
+    warn: False
+  when: ansible_os_family == "RedHat"
+  
+#####This tasks will check current installed package and take a backup in mentioning location below
+- name: Check all current installed packages on RedHat and append results to /opt/update.txt
+  shell: yum list installed > /opt/update-"`date +"%d-%m-%Y"`"
+  args:
+    warn: no
+  when: ansible_os_family == "RedHat"
+
+###This tasks will update packages via yum
+- name: upgrade packages via yum
+  yum:
+    name={{ yum_name }}
+    state={{ yum_state }}
+    disablerepo={{ yum_disablerepo }}
+    enablerepo={{ yum_enablerepo }}
+    exclude={{ yum_exclude }}
+  become: "yes"
+  register: yumcommandout
+  when: (ansible_facts['os_family'] == "RedHat" and ansible_facts['distribution_major_version'] == "6") or
+        (ansible_facts['os_family'] == "RedHat" and ansible_facts['distribution_major_version'] == "7")
+
+- name: Print errors if yum failed
+  debug:
+    msg: "yum command produced errors"
+  when: yumcommandout is not defined
+
+###This tasks will update packages via dnf
+- name: upgrade packages via dnf
+  dnf:
+    name={{ dnf_name }}
+    state={{ dnf_state }}
+    disablerepo={{ dnf_disablerepo }}
+    enablerepo={{ dnf_enablerepo }}
+    exclude={{ dnf_exclude }}
+  become: "yes"
+  register: dnfcommandout
+  when: (ansible_facts['os_family'] == "RedHat" and ansible_facts['distribution_major_version'] == "8")
+
+- name: Print errors if dnf failed
+  debug:
+    msg: "dnf command produced errors"
+  when: dnfcommandout is not defined
+
+###This tasks will run a script and check if kernel is updated and do we need a reboot
+- name: Check for reboot hint.
+  shell: LAST_KERNEL=$(rpm -q --last kernel | awk 'NR==1{sub(/kernel-/,""); print $1}'); CURRENT_KERNEL=$(uname -r); if [ $LAST_KERNEL != $CURRENT_KERNEL ]; then echo 'reboot'; else echo 'no'; fi
+  changed_when: false
+  register: yum_reboot_hint_result
+  when: ansible_os_family == "RedHat"
+
+## This tasks will display a check result
+- name: display result
+  debug:
+    var: yum_reboot_hint_result
+
+###This tasks will set a fact for the result. If answer is no, then the fact will not hosts to get rebooted
+- name: set the fact for not reboot
+  set_fact:
+    reboot_hint_result: false
+  when: ansible_os_family == "RedHat" and reboot_default | bool and yum_reboot_hint_result.stdout.find("no") != -1
+
+###This tasks will set a fact for the result. If answer is reboot, then the fact will all next tasks to reboot the hosts
+- name: set the fact for reboot
+  set_fact:
+    reboot_hint_result: true
+  when: ansible_os_family == "RedHat" and reboot_default | bool and yum_reboot_hint_result.stdout.find("reboot") != -1
+
+###This tasks will reboot the systems
+- name: reboot server if necessary after Kernel patching
+  reboot:
+    pre_reboot_delay: 0
+    post_reboot_delay: 10
+    reboot_timeout: 600
+  when: reboot_default | bool and reboot_hint_result | bool
+
+####This tasks will wait_for_connection on rebooted system to be available
+- name: Wait for reboot to complete and SSH to become available
+  wait_for_connection:
+    timeout: 600
+    delay: 60
+  when: reboot_default | bool and reboot_hint_result | bool
