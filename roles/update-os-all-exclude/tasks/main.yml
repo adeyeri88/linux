@@ -29,7 +29,7 @@
   yum:
     name: "{{ yum_name }}"
     state: "{{ yum_state }}"
-    exclude: "{{ yum_exclude }}"
+    exclude: "{{ yum_exclude.split(',') }}"  
 #    disablerepo={{ yum_disablerepo }}
 #    enablerepo={{ yum_enablerepo }}
 #    exclude: "{{ yum_exclude }}"
