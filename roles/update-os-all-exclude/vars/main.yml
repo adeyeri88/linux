@@ -2,7 +2,7 @@
 ###Defaults file for patching roles
 yum_name: "*"
 yum_state:  latest
-#yum_enablerepo: "JNPR-internal-repo,JNPR-os-base,JNPR-os-updates,JNPR-os-extras"
+#yum_enablerepo: "abdoul, alarou,"
 #yum_disablerepo: "*"
 yum_exclude: ""
 dnf_name: "*"
