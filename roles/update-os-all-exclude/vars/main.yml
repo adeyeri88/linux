@@ -11,4 +11,5 @@ dnf_state: latest
 #dnf_disablerepo: "*"
 dnf_exclude: ""
 reboot_default: true
-packages_name:
+packages:
+  - name: "{{ yum_exclude }}"

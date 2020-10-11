@@ -32,8 +32,8 @@
 #    exclude: "{{ yum_exclude_vars }}"
 #    disablerepo={{ yum_disablerepo }}
 #    enablerepo={{ yum_enablerepo }}
-    exclude: "{{ item.yum_exclude }}"
-  with_items: "{{ packages_name }}"
+    exclude: "{{ item.name }}"
+  with_items: "{{ packages }}"
   become: "yes"
   register: yumcommandout
   when: (ansible_facts['os_family'] == "RedHat" and ansible_facts['distribution_major_version'] == "6") or
