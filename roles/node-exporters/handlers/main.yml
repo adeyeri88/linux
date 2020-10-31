@@ -1,0 +1,8 @@
+---
+# handlers file for nfs-server
+- name: Start and enable the node_exporter service
+  service:
+    name: prometheus.service
+    enabled: yes
+    state: restarted
+  listen: 'restart prometheus'

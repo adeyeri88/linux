@@ -1,0 +1,7 @@
+---
+- name: Patching while Exclude
+  include_tasks: patching-all.yml
+  with_items:
+    - "{{ package }}"
+  loop_control:
+    loop_var: yum_exclude

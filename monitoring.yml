@@ -1,0 +1,24 @@
+##This playbook will call a role to deploy monitoring app's such as Prometheus, alertmanager,node exportes"
+---
+- name: Installing Prometheus on hosted machine
+  hosts: prometheus
+  become: yes
+  roles:
+    - role: ansible-prometheus
+      prometheus_config_scrape_configs:
+        - job_name: 'prometheus'
+          honor_labels: true
+          scrape_interval: '15s'
+          scrape_timeout: '3s'
+          metrics_path: '/metrics'
+          scheme: 'http'
+          static_configs:
+            - targets:
+                - 'localhost:9090' # Prometheus itself
+                - 'localhost:9100' # Node exporter
+        - job_name: 'consul-services'
+          consul_sd_configs:
+            - server: "localhost:8500"
+
+- name: Include a play after another play
+  import_playbook: grafana.yml

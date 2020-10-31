@@ -1,0 +1,129 @@
+# my global config
+global:
+  scrape_interval:     10s # Set the scrape interval to every 15 seconds. Default is every 1 minute.
+  evaluation_interval: 15s # Evaluate rules every 15 seconds. The default is every 1 minute.
+  # scrape_timeout is set to the global default (10s).
+
+# Alertmanager configuration
+alerting:
+  alertmanagers:
+  - static_configs:
+    - targets:
+      - dns1.adeolagroup.com:9093
+      # - alertmanager:9093
+
+# Load rules once and periodically evaluate them according to the global 'evaluation_interval'.
+rule_files:
+  # - "first_rules.yml"
+  # - "second_rules.yml"
+
+# A scrape configuration containing exactly one endpoint to scrape:
+# Here it's Prometheus itself.
+scrape_configs:
+  # The job name is added as a label `job=<job_name>` to any timeseries scraped from this config.
+  - job_name: 'prometheus'
+
+    # metrics_path defaults to '/metrics'
+    # scheme defaults to 'http'.
+
+    static_configs:
+    - targets: ['localhost:9090']
+
+  - job_name: 'class3 test'
+    static_configs:
+    - targets: ['grafana.adeolagroup.com:9100']
+      labels:
+        instance: grafana.adeolagroup.com
+    - targets: ['35.223.54.211:9100']
+      labels:
+        instance: agora-k8s-pg-1
+    - targets: ['34.66.149.60:9100']
+      labels:
+        instance: agora-k8s-rancher-1
+    - targets: ['34.121.227.39:9100']
+      labels:
+        instance: agora-k8s-worker-1
+    - targets: ['34.121.62.3:9100']
+      labels:
+        instance: agora-k8s-worker-2
+
+  - job_name: 'APP-GUI-SERVERS'
+    static_configs:
+    - targets: ['openstack.adeolagroup.com:9100']
+      labels:
+        instance: openstack.adeolagroup.com
+    - targets: ['foreman.adeolagroup.com:9100']
+      labels:
+        instance: foreman.adeolagroup.com
+    - targets: ['puppet.adeolagroup.com:9100']
+      labels:
+        instance: puppet.adeolagroup.com
+    - targets: ['gitlab.adeolagroup.com:9100']
+      labels:
+        instance: gitlab.adeolagroup.com
+    - targets: ['awx.adeolagroup.com:9100']
+      labels:
+        instance: awx.adeolagroup.com
+    - targets: ['spacewalk-2.adeolagroup.com:9100']
+      labels:
+        instance: spacewalk-2.adeolagroup.com
+
+  - job_name: 'NIFI-SERVERS'
+    static_configs:
+    - targets: ['nifi1.adeolgroup.com:9100']
+      labels:
+        instance: nifi1.adeolgroup.com
+    - targets: ['nifi2.adeolgroup.com:9100']
+      labels:
+        instance: nifi2.adeolgroup.com
+    - targets: ['nifi3.adeolgroup.com:9100']
+      labels:
+        instance: nifi3.adeolgroup.com
+    - targets: ['nifi4.adeolgroup.com:9100']
+      labels:
+        instance: nifi4.adeolgroup.com
+
+  - job_name: 'Agora-apps-staging Servers'
+    static_configs:
+    - targets: ['35.225.240.45:9100']
+      labels:
+        instance: agora-k8s-master
+    - targets: ['34.121.120.187:9100']
+      labels:
+        instance: agora-k8s-pg-1
+    - targets: ['34.122.22.64:9100']
+      labels:
+        instance: agora-k8s-rancher-1
+    - targets: ['162.222.181.167:9100']
+      labels:
+        instance: agora-k8s-worker-1
+    - targets: ['34.121.119.209:9100']
+      labels:
+        instance: agora-k8s-worker-2
+
+  - job_name: 'Agora-apps-production Servers'
+    static_configs:
+    - targets: ['34.70.60.48:9100']
+      labels:
+        instance: agora-k8s-master
+    - targets: ['34.72.184.22:9100']
+      labels:
+        instance: agora-k8s-pg-1
+    - targets: ['35.238.123.180:9100']
+      labels:
+        instance: agora-k8s-rancher-1
+    - targets: ['34.72.112.128:9100']
+      labels:
+        instance: agora-k8s-worker-1
+    - targets: ['35.202.45.220:9100']
+      labels:
+        instance: agora-k8s-worker-2
+    - targets: ['107.178.214.24:9100']
+      labels:
+        instance: foghorn-nimbus
+    - targets: ['35.239.15.232:9100']
+      labels:
+        instance: agora-foghorn
+    - targets: ['104.197.139.140:9100']
+      labels:
+        instance: agora-cfp
