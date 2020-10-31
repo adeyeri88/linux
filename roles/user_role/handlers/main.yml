@@ -1,0 +1,18 @@
+---
+# handlers file for nfs-server
+- name: restart nfs server
+  service:
+    name: "{{ item }}"
+    state: restarted
+    enabled: yes
+  loop: 
+    - rpcbind
+    - nfs-server
+  listen: 'restart nfs'
+
+- name: restart firewalld daemon
+  service:
+    name: firewalld
+    state: restarted
+    enabled: yes
+  listen: 'restart firewalld'

@@ -1,0 +1,49 @@
+---
+- hosts: "{{hosts_inventory}}"
+  become: yes
+  vars_files: 
+    - userinfo.yml
+  tasks:
+    - name: create all group users
+      group:
+        name: "{{ item.groupname }}"
+        state: present
+      with_items:
+        - "{{ group_info }}"
+    #    - staff
+    #    - faculty
+    #    - students
+    #    - guests
+
+    - name: create users in staff variable in web role and make them members of groups staff and students
+      user:
+        name: "{{ item.username }}"
+        groups: web
+        state: present
+        password: "$6$W6kEROvY$G64d4zHAf6Xpdm4T0PtKmaFuT6213TKXOh6/RcNLp6ZEm2A2HgEmiGc//tuSqK4nFybTiAY3PWIUVBq2.9EVp1"
+        update_password: always
+      with_items:
+        - "{{ user_info }}"
+          
+    - name: create users in zakiyyah, nadia, and web  variable in exam fun role and make them members of groups staff and students
+      user:
+        name: "{{ item.username }}"
+        groups: zakiyyah,nadia,web
+        state: present
+        password: "$6$W6kEROvY$G64d4zHAf6Xpdm4T0PtKmaFuT6213TKXOh6/RcNLp6ZEm2A2HgEmiGc//tuSqK4nFybTiAY3PWIUVBq2.9EVp1"
+        update_password: always
+        shell: /bin/csh
+      with_items:
+        - "{{ user_info1 }}"
+
+    - name: create users in nadia only group variable in exam fun role and make them members of groups staff and students
+      user:
+        name: "{{ item.username }}"
+        groups: nadia
+        state: present
+        password: "$6$W6kEROvY$G64d4zHAf6Xpdm4T0PtKmaFuT6213TKXOh6/RcNLp6ZEm2A2HgEmiGc//tuSqK4nFybTiAY3PWIUVBq2.9EVp1"
+        update_password: always
+        shell: /bin/tcsh
+        uid: "{{ item.uid }}" 
+      with_items:
+        - "{{ user_info2 }}"

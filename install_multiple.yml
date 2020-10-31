@@ -1,0 +1,38 @@
+---
+###This playbook is intend to install multiple application in one tasks
+- hosts: "{{ prompte_hosts }}"
+  become: yes
+#  gather_facts: false
+
+  tasks:
+    - name: install multiple following app's item (httpd, git, tcpdump, php)
+      yum:
+        name: "{{ item }}"
+        state: latest
+      loop:
+        - httpd
+        - git
+      when: (ansible_facts['distribution'] == "CentOS" and ansible_facts['distribution_major_version'] == "7") or
+            (ansible_facts['distribution'] == "Debian" and ansible_facts['distribution_major_version'] == "7")
+#     tags: item
+
+    - name: install multiple following app's loop (httpd, git, tcpdump, php)
+      yum:
+        name: "{{ item }}"
+        state: latest
+      loop:
+        - tcpdump
+        - php
+#     tags: loop
+      when: (ansible_facts['distribution'] == "CentOS" and ansible_facts['distribution_major_version'] == "6") or
+            (ansible_facts['distribution'] == "Debian" and ansible_facts['distribution_major_version'] == "7")
+
+    - name: install multiple following app's with regular (httpd, git, tcpdump, php)
+      yum:
+        name:
+          - nginx
+          - telnet
+        state: latest
+      when: (ansible_facts['distribution'] == "CentOS" and ansible_facts['distribution_major_version'] == "8") or
+            (ansible_facts['distribution'] == "Debian" and ansible_facts['distribution_major_version'] == "7")
+#     tags: regular
