@@ -24,6 +24,15 @@
     warn: no
   when: ansible_os_family == "RedHat"
 
+- name: Template a file to /etc/yum.conf to exclude packages
+  template:
+    src: yumconf.j2
+    dest: /etc/yum.conf
+    owner: root
+    group: root
+    mode: '0644'
+    backup: yes
+
 ###This tasks will update packages via yum
 - name: upgrade packages via yum
   yum:
@@ -32,8 +41,8 @@
 #    exclude: "{{ yum_exclude_vars }}"
 #    disablerepo={{ yum_disablerepo }}
 #    enablerepo={{ yum_enablerepo }}
-    exclude: "{{ item.name }}"
-  with_items: "{{ packages }}"
+    exclude: "{{ yum_exclude }}"
+#  with_items: "{{ packages }}"
   become: "yes"
   register: yumcommandout
   when: (ansible_facts['os_family'] == "RedHat" and ansible_facts['distribution_major_version'] == "6") or
