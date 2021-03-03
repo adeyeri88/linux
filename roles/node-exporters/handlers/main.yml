@@ -1,18 +1,8 @@
 ---
 # handlers file for nfs-server
-- name: restart nfs server
+- name: Start and enable the node_exporter service
   service:
-    name: "{{ item }}"
-    state: restarted
+    name: prometheus.service
     enabled: yes
-  loop: 
-    - rpcbind
-    - nfs-server
-  listen: 'restart nfs'
-
-- name: restart firewalld daemon
-  service:
-    name: firewalld
     state: restarted
-    enabled: yes
-  listen: 'restart firewalld'
+  listen: 'restart prometheus'

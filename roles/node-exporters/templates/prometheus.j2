@@ -49,36 +49,39 @@ scrape_configs:
 
   - job_name: 'APP-GUI-SERVERS'
     static_configs:
-    - targets: ['35.224.181.245:9100']
+    - targets: ['openstack.adeolagroup.com:9100']
       labels:
-        instance: agora-1
-    - targets: ['35.223.30.236:9100']
+        instance: openstack.adeolagroup.com
+    - targets: ['foreman.adeolagroup.com:9100']
       labels:
-        instance: agora-2
-    - targets: ['35.202.117.35:9100']
+        instance: foreman.adeolagroup.com
+    - targets: ['puppet.adeolagroup.com:9100']
       labels:
-        instance: agora-pg-1
-    - targets: ['34.70.63.193:9100']
+        instance: puppet.adeolagroup.com
+    - targets: ['gitlab.adeolagroup.com:9100']
       labels:
-        instance: agora-spark
-    - targets: ['34.70.71.21:9100']
+        instance: gitlab.adeolagroup.com
+    - targets: ['awx.adeolagroup.com:9100']
       labels:
-        instance: integration-test-vm-1
-    - targets: ['34.122.193.234:9100']
+        instance: awx.adeolagroup.com
+    - targets: ['spacewalk-2.adeolagroup.com:9100']
       labels:
-        instance: machinesense-vm-2
-    - targets: ['34.122.124.213:9100']
+        instance: spacewalk-2.adeolagroup.com
+
+  - job_name: 'NIFI-SERVERS'
+    static_configs:
+    - targets: ['nifi1.adeolgroup.com:9100']
       labels:
-        instance: machinesense-vm-3
-    - targets: ['35.193.4.195:9100']
+        instance: nifi1.adeolgroup.com
+    - targets: ['nifi2.adeolgroup.com:9100']
       labels:
-        instance: rancher-1
-    - targets: ['35.194.38.169:9100']
+        instance: nifi2.adeolgroup.com
+    - targets: ['nifi3.adeolgroup.com:9100']
       labels:
-        instance: virtual-agora-gw
-    - targets: ['34.67.31.162:9100']
+        instance: nifi3.adeolgroup.com
+    - targets: ['nifi4.adeolgroup.com:9100']
       labels:
-        instance: virtual-agora-openvino
+        instance: nifi4.adeolgroup.com
 
   - job_name: 'Agora-apps-staging Servers'
     static_configs:
