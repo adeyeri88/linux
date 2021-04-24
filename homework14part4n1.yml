@@ -1,0 +1,33 @@
+---
+
+- name: This playbook will install multiple packages at the sametimes
+  hosts: "{{ hosts_inventory }}"
+  become: yes
+
+  tasks:
+    - name: Remove below list of packages
+      yum:
+        name: ['httpd*', 'git', 'tcpdump', 'php']
+        #          - httpd*
+        #          - git
+        # - tcpdump
+        # - php*
+        state: absent
+      tags: remove
+
+    - name: Install below list of packages
+      yum:
+        name: "{{ item }}"
+        state: installed
+      with_items:
+        - httpd*
+        - git
+        - tcpdump
+        - php
+      tags: install
+      
+    - name: install telent packages
+      yum:
+        name: telnet
+        state: present
+      tags: one
