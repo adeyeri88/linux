@@ -62,6 +62,7 @@
       loop:
         - 8091/tcp
         - 21100/tcp
+        - 11210/tcp
 
     - name: reload the firewalld service
       service:
