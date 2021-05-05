@@ -1,0 +1,7 @@
+---
+- name: Create a PostgreSQL DB server
+  hosts: "{{ hosts_inventory }}"
+  become: yes
+
+  roles:
+    - private-docker-registry
