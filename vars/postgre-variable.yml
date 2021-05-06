@@ -1,0 +1,8 @@
+---
+postgresql_databases:
+  - name: "{{ postgres_name }}"
+postgresql_users:
+  - name: "{{ postgres_user }}"
+    password: "{{ postgres_password }}"
+    priv: ALL
+    role_attr_flags: {{ roles }}
