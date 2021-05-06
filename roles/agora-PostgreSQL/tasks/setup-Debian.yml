@@ -4,6 +4,11 @@
     name: "{{ postgresql_python_library }}"
     state: present
 
+#- name: Make sure psycopg2 is installed
+#  pip:
+#    name: psycopg2
+#    state: present
+
 - name: Ensure PostgreSQL packages are installed.
   apt:
     name: "{{ postgresql_packages }}"
