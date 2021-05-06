@@ -6,3 +6,4 @@ postgresql_users:
     password: "{{ postgres_password }}"
     priv: ALL
     role_attr_flags: "{{ roles }}"
+    db: "{{ postgres_name }}"
