@@ -9,6 +9,13 @@
   with_items: "{{ postgresql_global_config_options }}"
   notify: restart postgresql
 
+- name: change postgres network binding
+  lineinfile:
+    path: "{{ postgresql_config_path }}/postgresql.conf"
+    regexp: '# listen_addresses'
+    line: "listen_addresses = '*'"
+  notify: restart postgresql
+
 - name: Configure host based authentication (if entries are configured).
   template:
     src: "pg_hba.conf.j2"
