@@ -53,11 +53,11 @@ postgresql_databases: []
 
 # Users to ensure exist.
 postgresql_users: []
-# - name: jdoe #required; the rest are optional
-#   password: # defaults to not set
+ - name: "{{ postgres_user }}" #required; the rest are optional
+   password: "{{ postgres_password }}" # defaults to not set
 #   encrypted: # defaults to not set
-#   priv: # defaults to not set
-#   role_attr_flags: # defaults to not set
+   priv: ALL # defaults to not set
+   role_attr_flags: {{ roles }} # defaults to not set
 #   db: # defaults to not set
 #   login_host: # defaults to 'localhost'
 #   login_password: # defaults to not set
