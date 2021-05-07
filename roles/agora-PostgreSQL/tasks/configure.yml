@@ -12,7 +12,7 @@
 - name: change postgres network binding
   lineinfile:
     path: "{{ postgresql_config_path }}/postgresql.conf"
-    regexp: '# listen_addresses'
+    regexp: '#listen_addresses'
     line: "listen_addresses = '*'"
   notify: restart postgresql
 
