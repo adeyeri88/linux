@@ -1,7 +1,8 @@
 ---
 - name: Ensure PostgreSQL Python libraries are installed.
   apt:
-    name: "{{ postgresql_python_library }}"
+#    name: "{{ postgresql_python_library }}"
+    name: python-psycopg2
     state: latest
     update_cache: yes
 
