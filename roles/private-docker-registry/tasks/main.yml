@@ -55,4 +55,4 @@
     -e REGISTRY_HTTP_TLS_KEY=/var/registry/certs/self.key \
     registry
     args:
-      chdir: /var/registry/certs
+      chdir: /var/registry/certs/
