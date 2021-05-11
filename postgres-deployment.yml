@@ -1,0 +1,9 @@
+---
+- name: Create a PostgreSQL DB server
+  hosts: "{{ hosts_inventory }}"
+  become: yes
+  vars_files:
+    - vars/postgre-variable.yml
+
+  roles:
+    - agora-PostgreSQL

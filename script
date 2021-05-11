@@ -1,0 +1,2 @@
+#!/bin/bash
+ansible-playbook -e hosts_inventory=centos8.class2.com user_homework14.yml -b

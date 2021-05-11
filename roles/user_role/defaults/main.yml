@@ -1,0 +1,30 @@
+---
+# defaults file for nfs-server
+group_info:
+- groupname: "web"
+- groupname: "nadia"
+- groupname: "zakiyyah"
+
+user_info:
+- username: "Devs"
+
+- username: "Security"
+
+- username: "Admins"
+
+user_info1:
+- username: "cynthia"
+- username: "taofic"
+
+user_info2:
+- username: "fatass"
+  uid: 1099
+
+- username: "sounouvou"
+  uid: 1088
+
+- username: "roger"
+  uid: 1087
+
+- username: "lola"
+  uid: 1086

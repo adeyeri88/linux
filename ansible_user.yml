@@ -1,0 +1,5 @@
+---
+- hosts: "{{ hosts_inventory }}"
+  become: yes
+  roles:
+    - user_role
