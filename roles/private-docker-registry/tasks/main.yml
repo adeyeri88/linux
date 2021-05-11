@@ -36,6 +36,14 @@
 - name: mv the key to be accessible by container
   command: mv ca-key.pem /var/registry/certs/self.key
 
+- name: update key and file permission
+  file:
+    path: /var/registry/certs/{{ item }}
+    mode: '0644'
+  loop:
+    - self.crt
+    - self.key
+
 - name: start registry container
   command: docker run -d --name=docker-registry \
     -p 5000:5000 \
@@ -46,3 +54,5 @@
     -e REGISTRY_HTTP_TLS_CERTIFICATE=/var/registry/certs/self.crt \
     -e REGISTRY_HTTP_TLS_KEY=/var/registry/certs/self.key \
     registry
+    args:
+    chdir: somedir/
