@@ -1,0 +1,33 @@
+galaxy_info:
+  author: Eduard Generalov <eduard@generalov.net>
+  description: Provision postgresql server installation
+  license: MIT
+  min_ansible_version: 2.4
+  platforms:
+  - name: Debian
+    versions:
+    - sid
+    - buster
+    - stretch
+    - jessie
+    - wheezy
+    - lenny
+    - etch
+    - squeeze
+  - name: Ubuntu
+    versions:
+    - bionic
+    - cosmic
+#    - disco
+    - lucid
+    - precise
+    - saucy
+    - trusty
+    - wily
+    - xenial
+    - zesty
+  galaxy_tags:
+    - postgres
+    - postgresql
+dependencies:
+- egeneralov.postgresql-repository
