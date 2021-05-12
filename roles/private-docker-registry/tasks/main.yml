@@ -50,8 +50,8 @@
     state: directory
 
 - name: Create a password file containing username and password
-  shell: "docker run --entrypoint htpasswd registry -Bbn {{ username }} {{ password }} > /root/auth/htpasswd"
-
+  shell: "htpasswd registry -Bbn {{ username }} {{ password }} > /root/auth/htpasswd"
+#  shell: "docker run --entrypoint htpasswd registry -Bbn {{ username }} {{ password }} > /root/auth/htpasswd"
 
 - name: start registry container
   shell: docker run -d --name=docker-registry \
