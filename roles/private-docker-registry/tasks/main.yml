@@ -38,17 +38,20 @@
 
 - name: install docker compose
   apt:
-    name: docker-compose
+    name:
+      - docker-compose
+      - apache2-utils
     state: present
     update_cache: yes
 
-#- name: update key and file permission
-#  file:
-#    path: /var/registry/certs/{{ item }}
-#    mode: '0644'
-#  loop:
-#    - self.crt
-#    - self.key
+- name: create private docker registry authentication directory
+  file:
+    path: /root/auth
+    state: directory
+
+- name: Create a password file containing username and password
+  shell: "docker run --entrypoint htpasswd registry:2 -Bbn {{ your-username }} {{ your-password }} > /root/auth/htpasswd"
+
 
 - name: start registry container
   shell: docker run -d --name=docker-registry \
@@ -56,7 +59,21 @@
     --privileged=true \
     --restart=unless-stopped \
     -v /var/registry:/var/registry \
+    -e "REGISTRY_AUTH=htpasswd" \
+    -e "REGISTRY_AUTH_HTPASSWD_REALM=Registry Realm" \
+    -e REGISTRY_AUTH_HTPASSWD_PATH=/root/auth/htpasswd \
     -e STORAGE_PATH=/var/registry/data \
     -e REGISTRY_HTTP_TLS_CERTIFICATE=/var/registry/certs/self.crt \
     -e REGISTRY_HTTP_TLS_KEY=/var/registry/certs/self.key \
     registry
+
+#- name: start registry container
+#  shell: docker run -d --name=docker-registry \
+#    -p 5000:5000 \
+#    --privileged=true \
+#    --restart=unless-stopped \
+#    -v /var/registry:/var/registry \
+#    -e STORAGE_PATH=/var/registry/data \
+#    -e REGISTRY_HTTP_TLS_CERTIFICATE=/var/registry/certs/self.crt \
+#    -e REGISTRY_HTTP_TLS_KEY=/var/registry/certs/self.key \
+#    registry
