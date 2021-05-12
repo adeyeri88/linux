@@ -45,7 +45,7 @@
     - self.key
 
 - name: start registry container
-  command: docker run -d --name=docker-registry \
+  shell: docker run -d --name=docker-registry \
     -p 5000:5000 \
     --privileged=true \
     --restart=unless-stopped \
@@ -54,5 +54,3 @@
     -e REGISTRY_HTTP_TLS_CERTIFICATE=/var/registry/certs/self.crt \
     -e REGISTRY_HTTP_TLS_KEY=/var/registry/certs/self.key \
     registry
-    args:
-      chdir: /var/registry/certs/
