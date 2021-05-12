@@ -36,13 +36,19 @@
 - name: mv the key to be accessible by container
   command: mv ca-key.pem /var/registry/certs/self.key
 
-- name: update key and file permission
-  file:
-    path: /var/registry/certs/{{ item }}
-    mode: '0644'
-  loop:
-    - self.crt
-    - self.key
+- nme: install docker compose
+  apt:
+    name: docker-compose
+    state: present
+    update_cache: yes
+
+#- name: update key and file permission
+#  file:
+#    path: /var/registry/certs/{{ item }}
+#    mode: '0644'
+#  loop:
+#    - self.crt
+#    - self.key
 
 - name: start registry container
   shell: docker run -d --name=docker-registry \
