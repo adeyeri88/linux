@@ -1,4 +1,4 @@
 ######## variable login information for private docker Registry
 ---
-your-username: registry
-your-password: school1
+username: registry
+password: school1
