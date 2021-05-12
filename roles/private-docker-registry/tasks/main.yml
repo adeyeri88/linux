@@ -36,7 +36,7 @@
 - name: mv the key to be accessible by container
   command: mv ca-key.pem /var/registry/certs/self.key
 
-- nme: install docker compose
+- name: install docker compose
   apt:
     name: docker-compose
     state: present
