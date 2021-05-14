@@ -23,7 +23,11 @@ pgdg_users:
     password: root
     database: root
 
+pgdg_users:
+  - user: "{{ postgres_user }}"
+    password: "{{ postgres_password }}"
+    database: "{{ postgres_name }}"
+
 repo_url:
   Debian: "deb https://packagecloud.io/timescale/timescaledb/{{ ansible_distribution | lower }}/ {{ ansible_distribution_release }} main"
   Ubuntu: "deb http://ppa.launchpad.net/timescale/timescaledb-ppa/{{ ansible_distribution | lower }}/ {{ ansible_distribution_release }} main"
-

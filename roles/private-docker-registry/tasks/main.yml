@@ -46,15 +46,15 @@
 
 - name: create private docker registry authentication directory
   file:
-    path: /root/auth
+    path: /auth
     state: directory
 
 - name: Create a password file containing username and password
-  shell: "htpasswd -Bcb registry.password testuser password"
+  shell: htpasswd -Bbn admin password > /auth/htpasswd
 #  shell: "docker run --entrypoint htpasswd registry -Bbn {{ username }} {{ password }} > /root/auth/htpasswd"
 
-- name: mv the registry.password to be accessible by container
-  command: mv registry.password /root/auth/htpasswd
+#- name: mv the registry.password to be accessible by container
+#  command: mv registry.password /auth/htpasswd
 
 - name: start registry container
   shell: docker run -d --name=docker-registry \
@@ -64,7 +64,7 @@
     -v /var/registry:/var/registry \
     -e "REGISTRY_AUTH=htpasswd" \
     -e "REGISTRY_AUTH_HTPASSWD_REALM=Registry Realm" \
-    -e REGISTRY_AUTH_HTPASSWD_PATH=/root/auth/htpasswd \
+    -e REGISTRY_AUTH_HTPASSWD_PATH=/auth/htpasswd \
     -e STORAGE_PATH=/var/registry/data \
     -e REGISTRY_HTTP_TLS_CERTIFICATE=/var/registry/certs/self.crt \
     -e REGISTRY_HTTP_TLS_KEY=/var/registry/certs/self.key \
