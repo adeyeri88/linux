@@ -19,7 +19,7 @@
 - name: agora-PosgresSQL
   include_role:
 #    name: egeneralov.postgresql
-    name: ./agora-PosgresSQL
+    name: agora-PostgreSQL
 
 - name: import timescaledb repository key
   apt_key:
