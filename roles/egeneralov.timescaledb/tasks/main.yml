@@ -16,10 +16,10 @@
     fail_msg: "{{ pgdg_version }} is not supported version for timescaledb"
     success_msg: "Provisioning timescaledb over postgresql=={{ pgdg_version }}"
 
-- name: egeneralov.postgresql
+- name: agora-PosgresSQL
   include_role:
 #    name: egeneralov.postgresql
-    name: "agora-PosgresSQL"
+    name: agora-PosgresSQL
 
 - name: import timescaledb repository key
   apt_key:
