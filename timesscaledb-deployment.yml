@@ -6,4 +6,4 @@
     - vars/postgre-variable.yml
 
   roles:
-    - agora-PostgreSQL
+    - egeneralov.timescaledb
