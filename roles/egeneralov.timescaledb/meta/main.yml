@@ -18,4 +18,5 @@ galaxy_info:
   galaxy_tags:
     - timescaledb
 dependencies:
-  - egeneralov.postgresql
+#  - egeneralov.postgresql
+  - agora-PostgreSQL
