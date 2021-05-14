@@ -1,0 +1,14 @@
+---
+
+#########################
+## docker-registry install #
+##########################
+- name: Playbook codes to deploy docker registry
+  hosts: "{{ ansible_hosts }}"
+  become: yes
+
+  roles:
+    - docker-registry
+
+  vars_files:
+    - vars/my-vars.yml
