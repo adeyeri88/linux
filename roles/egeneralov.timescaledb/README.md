@@ -21,7 +21,7 @@ See `defaults/main.yml` for full list. Also see [egeneralov.postgresql](https://
 Dependencies
 ------------
 
-- [egeneralov.postgresql](https://github.com/egeneralov/postgresql).
+- [agora-PostgreSQL]
 
 Example Playbook
 ----------------
@@ -46,3 +46,5 @@ Author Information
 ------------------
 
 Eduard Generalov <eduard@generalov.net>
+
+This roles has been modified By Abdoul Alarou
