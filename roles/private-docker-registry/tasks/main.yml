@@ -51,10 +51,7 @@
 
 - name: Create a password file containing username and password
   shell: htpasswd -Bbn {{ username }} {{ password }} > /auth/htpasswd
-#  shell: "docker run --entrypoint htpasswd registry -Bbn {{ username }} {{ password }} > /root/auth/htpasswd"
-
-#- name: mv the registry.password to be accessible by container
-#  command: mv registry.password /auth/htpasswd
+  no_log: true
 
 - name: start registry container
   shell: docker run -d --name=docker-registry \
