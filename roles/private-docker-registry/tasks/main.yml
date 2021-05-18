@@ -65,7 +65,7 @@
     -e STORAGE_PATH=/var/registry/data \
     -e REGISTRY_HTTP_TLS_CERTIFICATE=/var/registry/certs/self.crt \
     -e REGISTRY_HTTP_TLS_KEY=/var/registry/certs/self.key \
-    registry
+    registry:2
 
 #- name: start registry container
 #  shell: docker run -d --name=docker-registry \
