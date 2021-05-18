@@ -1,4 +1,4 @@
 ######## variable login information for private docker Registry
 ---
-username: {{ user }}
+username: "{{ user }}"
 password: "{{ admin_password }}"
