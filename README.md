@@ -1,2 +1,2 @@
 # linux
-##Owner and Othor Abdoul
+##Owner and AUthor Abdoul
